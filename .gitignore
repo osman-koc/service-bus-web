@@ -1,7 +1,4 @@
 
-# Created by https://www.toptal.com/developers/gitignore/api/vs,vscode,visualstudio,visualstudiocode
-# Edit at https://www.toptal.com/developers/gitignore?templates=vs,vscode,visualstudio,visualstudiocode
-
 ### VisualStudioCode ###
 .vscode/*
 !.vscode/tasks.json
@@ -531,3 +528,8 @@ MigrationBackup/
 # Ionide (cross platform F# VS Code tools) working folder
 
 # End of https://www.toptal.com/developers/gitignore/api/vs,vscode,visualstudio,visualstudiocode
+
+
+
+
+src/ServiceBusWeb/appsettings.Development.json
