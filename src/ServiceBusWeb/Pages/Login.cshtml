@@ -1,0 +1,71 @@
+﻿@page
+@model ServiceBusWeb.Pages.LoginModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = null;
+}
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <title>Service Bus Explorer - Login</title>
+    @if (HttpContext.User.Identity.IsAuthenticated)
+    {
+        <meta http-equiv="Refresh" content="0; URL=/Home/Index">
+    }
+    <link rel="shortcut icon" type="image/png" href="~/favicon.ico" />
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link href="~/css/loginPage.css" rel="stylesheet" />
+
+</head>
+<body>
+
+    <div class="wrapper fadeInDown">
+        <div id="formContent">
+            <!-- Tabs Titles -->
+            <!-- Icon -->
+            <div class="fadeIn first">
+                <img src="~/img/login-user-icon.png" id="icon" alt="User Icon" />
+            </div>
+
+            <!-- Login Form -->
+            <form>
+                @if (!string.IsNullOrEmpty(Model.Message))
+                {
+                    <div class="alert alert-danger ng-hide small">
+                        <span class="ng-binding"> <strong>Hata: </strong>  @Model.Message</span>
+                    </div>
+                }
+
+                <div class="form-group">
+                    <div class="input-group mb-3">
+                        <input asp-for="Username" type="text" class="form-control fadeIn second" placeholder="Email address">
+                        <span asp-validation-for="Username" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input asp-for="Password" type="password" class="form-control fadeIn third" placeholder="Password">
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Log In" class="fadeIn fourth" />
+                </div>
+            </form>
+
+            <!-- Remind Passowrd -->
+            <div id="formFooter">
+                @*<a class="underlineHover" href="#">Forgot Password?</a>*@
+                <span class="underlineHover">© 2020 osmkoc.com</span>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>
+
+
