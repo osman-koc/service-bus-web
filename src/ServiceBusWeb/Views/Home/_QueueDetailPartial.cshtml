@@ -1,0 +1,59 @@
+﻿@model ServiceBusWeb.Models.QueueDetailViewModel
+
+<div class="quedetaillist">
+    <ul class="list-group">
+        <li class="list-group-item">
+            <strong> @Html.DisplayNameFor(model => model.Path)&nbsp;:&nbsp;</strong>
+            <span> @Html.DisplayFor(model => model.Path)</span>
+        </li>
+        <li class="list-group-item">
+            <strong>@Html.DisplayNameFor(model => model.Status)&nbsp;:&nbsp;</strong>
+            <span>@Html.DisplayFor(model => model.Status)</span>
+        </li>
+        <li class="list-group-item">
+            <strong>@Html.DisplayNameFor(model => model.MessageCount)&nbsp;:&nbsp;</strong>
+            <span>@Html.DisplayFor(model => model.MessageCount)</span>
+        </li>
+        <li class="list-group-item">
+            <strong>@Html.DisplayNameFor(model => model.CreatedAt)&nbsp;:&nbsp;</strong>
+            <span>@Html.DisplayFor(model => model.CreatedAt)</span>
+        </li>
+        <li class="list-group-item">
+            <strong>@Html.DisplayNameFor(model => model.UpdatedAt)&nbsp;:&nbsp;</strong>
+            <span>@Html.DisplayFor(model => model.UpdatedAt)</span>
+        </li>
+        <li class="list-group-item">
+            <strong>@Html.DisplayNameFor(model => model.AccessedAt)&nbsp;:&nbsp;</strong>
+            <span>@Html.DisplayFor(model => model.AccessedAt)</span>
+        </li>
+        <li class="list-group-item">
+            <strong>Detail&nbsp;&nbsp;</strong>
+            <div class="row no-gutters">
+                <div class="col mr-2">
+                    <div class="mt-4 small">
+                        <span class="mr-2">
+                            <i class="fas fa-circle text-success"></i>
+                            <strong>@Html.DisplayFor(model => model.ActiveMessageCount)</strong> Active
+                        </span>
+                        <span class="mr-2">
+                            <i class="fas fa-circle text-danger"></i>
+                            <strong>@Html.DisplayFor(model => model.DeadLetterMessageCount)</strong> DeadLetter
+                        </span>
+                        <span class="mr-2">
+                            <i class="fas fa-circle text-info"></i>
+                            <strong>@Html.DisplayFor(model => model.ScheduledMessageCount)</strong> Scheduled
+                        </span>
+                        <span class="mr-2">
+                            <i class="fas fa-circle text-primary"></i>
+                            <strong>@Html.DisplayFor(model => model.TransferMessageCount)</strong> Transfer
+                        </span>
+                        <span class="mr-2">
+                            <i class="fas fa-circle text-dark"></i>
+                            <strong>@Html.DisplayFor(model => model.TransferDeadLetterMessageCount)</strong> TransferDeadLetter
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>

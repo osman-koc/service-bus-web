@@ -1,0 +1,60 @@
+﻿@using Microsoft.Azure.ServiceBus.Management
+@model List<ServiceBusWeb.Models.QueueDetailViewModel>
+
+@{
+    for (int i = 0; i < Model.Count; i++)
+    {
+        string textClass = Model[i].DeadLetterMessageCount > 0 ? "text-danger"
+            : Model[i].Status != EntityStatus.Active ? "text-warning"
+            : "text-success";
+        string iconClass = textClass == "text-danger" ? textClass : "text-gray-300";
+        <div class="col-xl-3 col-md-6 mb-4 queitem">
+            <div class="card shadow py-2 border-left-light">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-s font-weight-bold mb-1 @textClass">
+                                @Model[i].Path
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                @Model[i].MessageCount toplam mesaj &nbsp;
+                                (<span style="color:#1cc88a">@Model[i].ActiveMessageCount</span> / <span style="color:#e74a3b">@Model[i].DeadLetterMessageCount</span>)
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <a href="javascript:GetQueueDetail('@Model[i].Path');" title="Details">
+                                <i class="fas fa-info-circle fa-2x @iconClass"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row no-gutters" hidden>
+                        <div class="col mr-2">
+                            <div class="mt-4 small">
+                                <span class="mr-2">
+                                    <i class="fas fa-circle text-success"></i>
+                                    <strong>@Model[i].ActiveMessageCount</strong> Active
+                                </span>
+                                <span class="mr-2">
+                                    <i class="fas fa-circle text-danger"></i>
+                                    <strong>@Model[i].DeadLetterMessageCount</strong> DeadLetter
+                                </span>
+                                <span class="mr-2">
+                                    <i class="fas fa-circle text-info"></i>
+                                    <strong>@Model[i].ScheduledMessageCount</strong> Scheduled
+                                </span>
+                                <span class="mr-2">
+                                    <i class="fas fa-circle text-primary"></i>
+                                    <strong>@Model[i].TransferMessageCount</strong> Transfer
+                                </span>
+                                <span class="mr-2">
+                                    <i class="fas fa-circle text-dark"></i>
+                                    <strong>@Model[i].TransferDeadLetterMessageCount</strong> TransferDeadLetter
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
