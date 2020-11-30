@@ -1,8 +1,225 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model ServiceBusWeb.Models.QueueListViewModel
+@{
+    ViewData["Title"] = "Dashboard";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+
+    <div class="refreshBtn">
+        <a href="javascript:ReloadRefreshButton('False');"
+           class="d-sm-inline-block btn btn-icon-split shadow-sm btn-success refBtn">
+            <span class="icon text-white-50">
+                <i class="fas fa-check"></i>
+            </span>
+            <span class="text">Refresh: On</span>
+        </a>
+    </div>
+
+    <div id="btn-load-refresh">
+        <a href="javascript:;">
+            <div class="w-100 progress-button">
+                <buttonn class="btn b-r5 ladda-button btn-border btnposition-reflesh refresh-btn" data-style="expand-left">
+                    <span class="ladda-label">Refresh (<span id="refresh-time"></span>)</span>
+                </buttonn>
+            </div>
+        </a>
+    </div>
+
+
+    <div class="d-sm-inline-block mt-1">
+        <form class="d-sm-inline-block form-inline mr-auto ml-md-6 my-4 my-md-0 mw-100 navbar-search">
+            <div class="input-group">
+                <input type="text" id="queSearch" class="form-control bg-white border-0 small" placeholder="Ara..." aria-label="Ara" aria-describedby="basic-addon2">
+            </div>
+        </form>
+    </div>
+
+    <div class="d-none d-sm-inline-block">
+        <div class="custom-control custom-checkbox mr-sm-2">
+            <input type="checkbox" class="custom-control-input" id="justHasDeadLetter">
+            <label class="custom-control-label" for="justHasDeadLetter">Show only DeadLetter</label>
+        </div>
+    </div>
 </div>
+
+<hr />
+
+<!-- Content Row -->
+@if (Model == null)
+{
+    <div class="row queContent">
+        <h1 style="color: red; ">No data!...</h1>
+    </div>
+}
+else
+{
+    <div class="queContent">
+        <partial name="_QueueListPartial" model="Model.QueueList" />
+    </div>
+}
+<!-- Content Row -->
+
+@section modals{
+
+    <div class="modal fade" id="QueueDetailModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Queue Detail</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section scripts{
+    <script>
+        var refreshStatus = '@Model.RefreshPage';
+        var hasDeadletter = false;
+        var searchText = '';
+
+        function GetQueueDetail(path) {
+            $('#QueueDetailModal').modal('show');
+            $("#QueueDetailModal .modal-body").html('Loading data...');
+            $.ajax({
+                url: '@Url.Action("GetQueueDetailByPath", "Home")',
+                data: { path },
+                method: 'GET',
+                success: function (result) {
+                    if (result) {
+                        $("#QueueDetailModal .modal-body").html(result);
+                    }
+                    else {
+                        $('#QueueDetailModal').modal('hide');
+                        if (result.message != undefined)
+                            toastr["error"](result.message);
+                        else
+                            toastr["error"]("A system error has occurred.");
+                    }
+                },
+                error: function (ex) {
+                    $('#QueueDetailModal').modal('hide');
+                    if (ex.message != null)
+                        toastr["error"](ex.message);
+                    else
+                        toastr["error"]("A system error has occurred: ajax error.");
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            AutoRefresh();
+
+            $("#queSearch").on("keyup", function () {
+                searchText = $(this).val().toLowerCase();
+                SetSearchText(searchText);
+            });
+
+            $("#justHasDeadLetter").change(function () {
+                hasDeadletter = $(this).is(":checked");
+                SetSearchText(searchText);
+            });
+        });
+
+        $(document).on('click', '.refresh-btn', function (e) {
+            if (refreshStatus === 'True') {
+                RefreshContent();
+                AutoRefreshClear();
+            }
+        });
+
+        function SetSearchText(text) {
+            var value = text != undefined ? text : searchText;
+            $(".queContent .queitem").filter(function () {
+                if (hasDeadletter == true)
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1 && $(this).text().toLowerCase().indexOf('0 deadletter') <= -1);
+                else
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+            });
+        }
+
+        function AutoRefresh() {
+            var refreshButton = $('.refresh-btn');
+            if (refreshButton[0] && refreshStatus === 'True') {
+                timeLeft = 60;
+                window.timer = setInterval(function () { $('#refresh-time').html(timeLeft + " sec"); timeLeft -= 1; }, 1000);
+                window.refreshTrigger = setInterval(function () {
+                    refreshButton[0].click();
+                }, 60000);
+            }
+        }
+        function AutoRefreshClear() {
+            clearInterval(window.timer);
+            clearInterval(window.refreshTrigger);
+            $('#refresh-time').html("0 sec");
+        }
+
+        function RefreshContent(refState) {
+            if (refState != undefined) {
+                refreshStatus = refState;
+            }
+
+            $('#queSearch').val('');
+            document.getElementById("queSearch").disabled = true;
+
+            $.ajax({
+                url: '@Url.Action("RefreshQueueList", "Home")',
+                data: { connectionType },
+                method: 'GET',
+                success: function (result) {
+                    if (result) {
+                        $(".queContent").html(result);
+                        document.getElementById("queSearch").disabled = false;
+                        $('#queSearch').val(searchText);
+                        SetSearchText(searchText);
+                        AutoRefresh();
+                    }
+                    else {
+                        if (result.message != undefined)
+                            toastr["error"](result.message);
+                        else
+                            toastr["error"]("Sistemsel bir hata oluştu (result is null).");
+                    }
+                },
+                error: function (ex) {
+                    if (ex.message != null) {
+                        toastr["error"](ex.message);
+                    }
+                    else {
+                        toastr["error"]("Sistemsel bir hata oluştu (ajax error).");
+                        location.reload();
+                    }
+                }
+            });
+        }
+
+        function ReloadRefreshButton(refState) {
+            if (refState != undefined && refState != '') {
+                refreshStatus = refState;
+            }
+            var btnRefPage = refreshStatus == 'True' ? "'False'" : "'True'";
+            var onOffText = refreshStatus == 'True' ? "On" : "Off";
+            var btnClass = refreshStatus == 'True' ? 'btn-success' : 'btn-light';
+            $('.refreshBtn').html('<a href="javascript:ReloadRefreshButton(' + btnRefPage + ');"'
+                + ' class="d-sm-inline-block btn btn-icon-split shadow-sm ' + btnClass + '">'
+                + ' <span class="icon text-white-50"><i class="fas fa-check"></i></span>'
+                + ' <span class="text">Refresh: ' + onOffText + '</span></a>');
+
+            if (refState === 'True') {
+                $('#btn-load-refresh').removeAttr('hidden');
+                AutoRefresh();
+            } else {
+                $('#btn-load-refresh').attr('hidden', '');
+                AutoRefreshClear();
+            }
+        }
+    </script>
+}
