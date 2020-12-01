@@ -533,3 +533,4 @@ MigrationBackup/
 
 
 src/ServiceBusWeb/appsettings.Development.json
+src/ServiceBusWeb/Properties/launchSettings.json

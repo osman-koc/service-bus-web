@@ -49,9 +49,8 @@ namespace ServiceBusWeb.Pages
                             new Claim("FullName", Username),
                             new Claim(ClaimTypes.Role, "Administrator")
                         };
-                    ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity),
-                        new AuthenticationProperties() { IsPersistent = true });
+                    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), new AuthenticationProperties() { IsPersistent = true });
                     return LocalRedirect(GetLocalUrl(Url, returnUrl));
                 }
             }
@@ -63,7 +62,7 @@ namespace ServiceBusWeb.Pages
         {
             if (!urlHelper.IsLocalUrl(localUrl))
             {
-                return urlHelper.Page("/Index");
+                return urlHelper.Page("/Home/Index");
             }
             return localUrl;
         }
