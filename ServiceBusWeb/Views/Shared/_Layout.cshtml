@@ -74,7 +74,7 @@
                         <!-- Nav Item - Connect Information -->
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link" href="/Logout" role="button">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600"> Logout"</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600"> Logout</span>
                                 <i class="fa fa-sign-out-alt"></i>
                             </a>
                         </li>
@@ -87,7 +87,7 @@
                     @RenderBody()
                 </div>
 
-                <div id="wait" class="ui-loader"><img src='~/img/loading-animation.gif' width="64" height="64" /><br><span style="color:#0685BF">Reloading..</span></div>
+                @*<div id="wait" class="ui-loader"><img src='~/img/loading-animation.gif' width="64" height="64" /><br><span style="color:#0685BF">Reloading..</span></div>*@
 
                 <!-- /.container-fluid -->
             </div>
@@ -99,8 +99,8 @@
             <footer class="sticky-footer bg-white">
                 <div class="container-fluid my-auto">
                     <div class="copyright text-center my-auto row">
-                        <span class="fa-pull-left text-left w-25">v1</span>
-                        <span class="fa-pull-right text-right w-75">© @DateTime.Now.Year osmkoc.com</span>
+                        <span class="fa-pull-left text-left w-25">© @DateTime.Now.Year <a href="https://osmkoc.com" target="_blank">osmkoc.com</a></span>
+                        <span class="fa-pull-right text-right w-75">v1</span>
                     </div>
                 </div>
             </footer>

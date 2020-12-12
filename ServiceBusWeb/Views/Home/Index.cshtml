@@ -29,7 +29,7 @@
     <div class="d-sm-inline-block mt-1">
         <form class="d-sm-inline-block form-inline mr-auto ml-md-6 my-4 my-md-0 mw-100 navbar-search">
             <div class="input-group">
-                <input type="text" id="queSearch" class="form-control bg-white border-0 small" placeholder="Ara..." aria-label="Ara" aria-describedby="basic-addon2">
+                <input type="text" id="queSearch" class="form-control bg-white border-0 small" placeholder="Search..." aria-label="Search" aria-describedby="basic-addon2">
             </div>
         </form>
     </div>
@@ -150,7 +150,7 @@ else
             var refreshButton = $('.refresh-btn');
             if (refreshButton[0] && refreshStatus === 'True') {
                 timeLeft = 60;
-                window.timer = setInterval(function () { $('#refresh-time').html(timeLeft + " sec"); timeLeft -= 1; }, 1000);
+                window.timer = setInterval(function () { $('#refresh-time').html(timeLeft + " s"); timeLeft -= 1; }, 1000);
                 window.refreshTrigger = setInterval(function () {
                     refreshButton[0].click();
                 }, 60000);
@@ -159,7 +159,7 @@ else
         function AutoRefreshClear() {
             clearInterval(window.timer);
             clearInterval(window.refreshTrigger);
-            $('#refresh-time').html("0 sec");
+            $('#refresh-time').html("0 s");
         }
 
         function RefreshContent(refState) {
@@ -172,7 +172,6 @@ else
 
             $.ajax({
                 url: '@Url.Action("RefreshQueueList", "Home")',
-                data: { connectionType },
                 method: 'GET',
                 success: function (result) {
                     if (result) {
@@ -186,7 +185,7 @@ else
                         if (result.message != undefined)
                             toastr["error"](result.message);
                         else
-                            toastr["error"]("Sistemsel bir hata oluştu (result is null).");
+                            toastr["error"]("A system error has occurred: result is null.");
                     }
                 },
                 error: function (ex) {
@@ -194,7 +193,7 @@ else
                         toastr["error"](ex.message);
                     }
                     else {
-                        toastr["error"]("Sistemsel bir hata oluştu (ajax error).");
+                        toastr["error"]("A system error has occurred: ajax error.");
                         location.reload();
                     }
                 }

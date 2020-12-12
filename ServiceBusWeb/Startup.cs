@@ -36,8 +36,8 @@ namespace ServiceBusWeb
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
-            services.AddHealthChecks()
-                    .AddCheck("self", () => HealthCheckResult.Healthy());
+
+            services.AddHealthChecks().AddCheck("self", () => HealthCheckResult.Healthy());
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
             {
@@ -61,6 +61,7 @@ namespace ServiceBusWeb
 
             if (env.IsDevelopment())
             {
+                app.UseHttpsRedirection();
                 app.UseDeveloperExceptionPage();
             }
             else
@@ -71,12 +72,11 @@ namespace ServiceBusWeb
                 app.UseStatusCodePagesWithReExecute("/Error", "?statusCode={0}");
             }
 
-            app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            app.UseAuthentication().UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
